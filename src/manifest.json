@@ -31,13 +31,17 @@
         "SET SETPOINT",
         "SET MODE",
         "SET FAN_SPEED"
+        "RESET FILTER"
       ],
       "states": [
         { "id": "power", "type": "BOOLEAN", "label": "Power" },
+        { "id": "comm_status", "type": "ENUM", "label": "Status", "values": ["Online", "Offline Error"] }
         { "id": "setpoint", "type": "NUMBER", "label": "Setpoint", "unit": "°C" },
         { "id": "temperature", "type": "NUMBER", "label": "Room Temperature", "unit": "°C" },
         { "id": "mode", "type": "ENUM", "label": "Mode", "values": ["Heat", "Cool", "Dry", "Fan", "Auto"] },
-        { "id": "fan_speed", "type": "ENUM", "label": "Fan Speed", "values": ["Auto", "Low", "Medium", "High"] }
+        { "id": "fan_speed", "type": "ENUM", "label": "Fan Speed", "values": ["Auto", "Low", "Medium", "High"] },
+        { "id": "filter_alarm", "type": "BOOLEAN", "label": "Filter Clean Required" },
+        { "id": "error_code", "type": "STRING", "label": "HVAC Error Code" }
       ],
       "parameters": [
         {
