@@ -64,6 +64,28 @@ To ensure the BLI interface displays the correct icons and controls, the followi
 
 > **Note:** When sending commands from BLI to Intesis, the driver converts these values back to uppercase (e.g., `Heat` becomes `HEAT`) and terminates with a `\r` character per the [Intesis WMP Specification](https://www.hms-networks.com).
 
+## **Troubleshooting the FJ-RC-WMP-1 on BLI Gen 3**
+
+If the driver is not communicating or states are not updating, verify the following against the [Intesis WMP Specification](https://www.hms-networks.com).
+
+#### **1. Connection Issues**
+*   **60-Second Timeout**: If the driver disconnects every minute, ensure the `Timer` in `driver.lua` is sending the `<ID\r` command every 45 seconds to reset the [Intesis Idle Timer](https://engenuity.com).
+*   **Port Conflict**: Ensure no other Home Automation system is connected to the gateway. The FJ-RC-WMP-1 typically supports only **one concurrent TCP session** on port 3310.
+*   **IP Ping**: Use the [BLI Tools](https://khimo.github.io) to ping the gateway's IP to ensure it is reachable on the local VLAN.
+
+#### **2. Incorrect State Feedback**
+*   **Wildcard Support**: If `GET,*:*` fails, try querying the specific unit ID (e.g., `GET,1:*`). Some Fujitsu firmware versions prefer explicit ID queries.
+*   **Temperature Scaling**: If the BLI shows `225°C` instead of `22.5°C`, verify the `tonumber(val) / 10` logic in the `parse_intesis_message` function.
+*   **Fujitsu Bus Error**: If the `error_code` shows `COMM`, check the 3-wire BWR connection between the Intesis gateway and the Fujitsu indoor unit.
+
+#### **3. Debugging via BLI Monitor**
+Access the **BeoLiving Intelligence Monitor** to view raw ASCII traffic:
+- **Outgoing**: Look for strings starting with `<SET...` or `<GET...` ending in `\r`.
+- **Incoming**: Look for `<ANS...` (answer) or `<CHN...` (change) notifications.
+- **Errors**: Look for `<ERR,1:X,Y` strings which indicate an invalid parameter or a [Fujitsu system fault](https://www.hms-networks.com).
+
+---
+
 
 ## Technical Notes
 - **Protocol**: ASCII over TCP/IP (Port 3310).
