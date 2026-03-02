@@ -2,17 +2,26 @@
 
 This driver provides a native IP integration for **Fujitsu RAC/VRF systems** using the **Intesis FJ-RC-WMP-1** WiFi Management Protocol (WMP) gateway.
 
-## Features
-- **Bidirectional Control**: Power, Setpoint, Mode, and Fan Speed.
+## 📂 Project Structure
+For the `.bli` package, ensure your directory is structured as follows:
+- `manifest.json` (Driver configuration)
+- `driver.lua` (Main logic)
+- `README.md` (This file)
+- `icon.png` (512x512 PNG icon)
+
+## 🚀 Features
+- **Full Control**: Power, Setpoint, Mode, and Fan Speed.
 - **Real-time Feedback**: Ambient temperature and status updates.
 - **Fujitsu Specifics**: Filter cleaning alerts and system error code reporting.
 - **Auto-Discovery**: Support for BLI UDP discovery (Port 3310).
+- **Keep-Alive**: Automatic 45-second heartbeat to prevent Intesis 60s socket timeout.
 - **Multi-Unit Support**: Integration for systems with multiple indoor units.
 
-## Hardware Configuration
+## 🛠 Hardware Setup
 1. Ensure the **FJ-RC-WMP-1** is connected to the Fujitsu 3-wire BWR bus.
 2. Connect the gateway to your local network via WiFi using the [Intesis configuration tool](https://www.intesis.com).
-3. **Important**: Verify the **Internal Unit ID** (usually `1`) assigned to the AC unit in the Intesis web interface.
+3. Ensure the gateway has a **Static IP** on your local network.
+4. **Important**: Verify the **Internal Unit ID** (usually `1`) assigned to the AC unit in the Intesis web interface.
 
 ## BLI Setup Instructions
 1. Upload the `.bli` package to your **BeoLiving Intelligence** via `Settings -> Systems -> Custom Drivers`.
@@ -69,7 +78,7 @@ To ensure the BLI interface displays the correct icons and controls, the followi
 If the driver is not communicating or states are not updating, verify the following against the [Intesis WMP Specification](https://www.hms-networks.com).
 
 #### **1. Connection Issues**
-*   **60-Second Timeout**: If the driver disconnects every minute, ensure the `Timer` in `driver.lua` is sending the `<ID\r` command every 45 seconds to reset the [Intesis Idle Timer](https://engenuity.com).
+*   **60-Second Timeout**: If the driver disconnects every minute, ensure the `Timer` in `driver.lua` is sending the `<ID\r` command every 45 seconds to reset the [Intesis Idle Timer](https://engenuity.com). Verify the "ID" command is visible in the BLI Monitor.
 *   **Port Conflict**: Ensure no other Home Automation system is connected to the gateway. The FJ-RC-WMP-1 typically supports only **one concurrent TCP session** on port 3310.
 *   **IP Ping**: Use the [BLI Tools](https://khimo.github.io) to ping the gateway's IP to ensure it is reachable on the local VLAN.
 
@@ -83,6 +92,7 @@ Access the **BeoLiving Intelligence Monitor** to view raw ASCII traffic:
 - **Outgoing**: Look for strings starting with `<SET...` or `<GET...` ending in `\r`.
 - **Incoming**: Look for `<ANS...` (answer) or `<CHN...` (change) notifications.
 - **Errors**: Look for `<ERR,1:X,Y` strings which indicate an invalid parameter or a [Fujitsu system fault](https://www.hms-networks.com).
+- **Filter Sign**: If the `filter_alarm` state is active, clean the unit filter and use the **Reset Filter** event in the BLI app.
 
 ---
 
