@@ -1,0 +1,53 @@
+{
+  "id": "intesis_wmp_hvac",
+  "version": "1.0.0",
+  "label": "Intesis WMP HVAC Gateway",
+  "author": "Custom Developer",
+  "description": "Integration for Intesis WiFi Management Protocol (WMP) gateways. Supports multi-unit VRF/VRV systems.",
+  "category": "CLIMATE",
+  "minimum_bli_version": "1.4.0",
+  "main_file": "driver.lua",
+  "connection_type": "TCP",
+  "discovery": true,
+  "channels": [
+    {
+      "id": 1,
+      "name": "Intesis Gateway TCP",
+      "type": "TCP",
+      "default_port": 3310,
+      "timeout": 60
+    }
+  ],
+  "setup_fields": [
+    { "name": "ip_address", "label": "IP Address", "type": "STRING", "required": true },
+    { "name": "port", "label": "Port", "type": "NUMBER", "default": 3310 }
+  ],
+  "resource_types": [
+    {
+      "id": "AC_UNIT",
+      "label": "AC Indoor Unit",
+      "events": [
+        "SET POWER",
+        "SET SETPOINT",
+        "SET MODE",
+        "SET FAN_SPEED"
+      ],
+      "states": [
+        { "id": "power", "type": "BOOLEAN", "label": "Power" },
+        { "id": "setpoint", "type": "NUMBER", "label": "Setpoint", "unit": "°C" },
+        { "id": "temperature", "type": "NUMBER", "label": "Room Temperature", "unit": "°C" },
+        { "id": "mode", "type": "ENUM", "label": "Mode", "values": ["Heat", "Cool", "Dry", "Fan", "Auto"] },
+        { "id": "fan_speed", "type": "ENUM", "label": "Fan Speed", "values": ["Auto", "Low", "Medium", "High"] }
+      ],
+      "parameters": [
+        {
+          "name": "unit_id",
+          "label": "Intesis Unit ID",
+          "type": "NUMBER",
+          "required": true,
+          "description": "The internal ID assigned to this indoor unit in the Intesis configuration (usually 1, 2, 3...)."
+        }
+      ]
+    }
+  ]
+}
