@@ -1,4 +1,5 @@
 # Intesis FJ-RC-WMP-1 (Fujitsu HVAC) Driver for BLI Gen 3
+_Intesis WMP Gateway driver for Beolink Gateway / Beoliving Intelligence_
 
 This driver provides a native IP integration for **Fujitsu RAC/VRF systems** using the **Intesis FJ-RC-WMP-1** WiFi Management Protocol (WMP) gateway.
 
